@@ -9,7 +9,7 @@ This repository is designed to test the conditions under which IB optimized word
 quasi-concave probability functions over the meaning space. 
 
 In order to generate the natural language encoders you must first download the world color survey (WCS) data from 
-https://linguistics.berkeley.edu/wcs/data.html. This data should be stored in a single director that contains 
+https://linguistics.berkeley.edu/wcs/data.html. This data should be stored in a single directory that contains 
 chip.txt, term.txt, lang.txt, and dict.txt from the WCS data. 
 
 The repository is comprised of the following:
@@ -30,32 +30,30 @@ wcs_data_processing.
 * utils: Contain the quasi-convexity calculation and helper functions.
 * wcs_data_processing: Converts the WCS data into an ingestible format to create the NL encoders.
 
-ib_color_naming: taken from https://github.com/nogazs/ib-color-naming to gain access to assessment metrics for comparison 
-and optimal model results.
-
 ib_from_scratch: A work-in-progress to generate the intermittent encoders from the IB-optimization process. Meant for 
-future development, current results are suspect. 
+future development, current results are suspect. This borrows heavily from https://github.com/nogazs/ib-color-naming and
+https://gitlab.com/epiasini/embo.
 
 res: houses the encoders, quasi-convexity values and other results used to generate the charts and statistics cited in 
-the paper. 
-
-The IB color-naming modeling framework is taken from 
-
-@article{Zaslavsky2018efficient,
-    author = {Zaslavsky, Noga and Kemp, Charles and Regier, Terry and Tishby, Naftali},
-    title = {Efficient compression in color naming and its evolution},
-    journal = {Proceedings of the National Academy of Sciences}
-    volume = {115},
-    number = {31},
-    pages = {7937--7942},
-    year = {2018},
-    doi = {10.1073/pnas.1800521115},
-    publisher = {National Academy of Sciences},
-    issn = {0027-8424}
-}
-
-This repository will eventually house the final paper.
+the paper.
 
 ## How to run the code
+
+1. Generate Natural Language Encoders:
+   1. In order to perform the analyses discussed in \"Convexity is a Fundamental Feature of Efficient Semantic 
+   Compression in Probability Spaces\" you must first download the WCS data and run wcs_data_processing.
+   2. Then run natural_languages_assessment to generate the natural language encoders. 
+      1. When you run natural_languages_assessment you must specify the appropriate directories at lines 21, 22, 26.
+2. Generate IB Optimal Encoders:
+   1. You must then download the optimal encoders and run get_optimal_encoders to generate the optimal encoders in the 
+   correct format. 
+      1. When you run get_optimal_encoders you must specify the appropriate directory at line 13.
+3. Generate Sub-Optimal Encoders:
+   1. Then you can run generate_suboptimal_encoders on both sets of encoders to generate the shuffled encoders. 
+      1. When you run generate_suboptimal_encoders you will need to specify the appropriate filepaths at lines 216, 217, 
+      218 and 224.
+4. Generate Charts and Statistical Tests:
+   1. Finally, run combined_chart_creation to generate the charts and statistical tests included in the paper. 
+      1. When you run combined_chart_creation you will need to specify the output filepath at line 12.
 
 ''

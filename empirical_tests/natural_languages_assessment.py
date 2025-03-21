@@ -8,7 +8,6 @@ for each language, to be used in generating the IB chart.
 import numpy as np
 import pandas as pd
 import pickle
-from matplotlib import pyplot as plt
 from ib_from_scratch.wcs_meaning_distributions import generate_WCS_meanings
 from empirical_tests.wcs_data_processing import wcs_data_pull, create_color_space_table, lang_id_map, \
     create_lang_table, create_lang_encoder_dist
@@ -19,30 +18,12 @@ from ib_from_scratch.ib_utils import get_entropy, get_mutual_information
 
 # Pull the data
 chip_df, term_df, lang_df, vocab_df, cielab_df = wcs_data_pull(
-    wcs_data_path='/Users/lindsayskinner/Documents/school/CLMS/Thesis/data/WCS-Data-20110316',
-    CIELAB_path='/Users/lindsayskinner/Documents/school/CLMS/Thesis/data/cnum_CIELAB_table.txt'
+    wcs_data_path='put wcs directory path here',
+    CIELAB_path='put cnum_CIELAB_table.txt path here'
 )
 
-# # load the model data to get pu
-# model_path = '/Users/lindsayskinner/Documents/school/CLMS/Thesis/IB_color_naming_model/IB_color_naming.pkl'
-# with open(model_path, 'rb') as f:
-#     model_data = pickle.load(f)
-# pu_df = model_data['pM']
-#
-# # Generate meaning distributions, as defined in IB color paper
-# u_vals = cielab_df['chip_id'].values
-# meanings = generate_WCS_meanings(perceptual_variance=64)
-# pm = np.ones(meanings.shape[0]) / meanings.shape[0]
-# #pum_joint = meanings / meanings.sum()
-# #pu_m = pum_joint.T / pm
-# pu_m = meanings
-# # TODO: replace with Noga's p(u) dist
-# # pu_df = np.sum(meanings, axis=0)
-# # pu_df = pu_df / pu_df.sum()
-# #pu_df = np.ones(meanings.shape[0]) / meanings.shape[0]
-
 # load the model data
-model_path = '/Users/lindsayskinner/Documents/school/CLMS/Thesis/IB_color_naming_model/IB_color_naming.pkl'
+model_path = 'put IB_color_naming.pkl path here'
 with open(model_path, 'rb') as f:
     model_data = pickle.load(f)
 
@@ -95,19 +76,10 @@ for lang in lang_list:
 
     # Get other required distributions
     qw_df = update_qw(pm, enc_df)
-    # mwu_df = np.ones((enc_df.shape[1], u_vals.shape[0]))
-    #mwu_df = np.ones((u_vals.shape[0], enc_df.shape[1]))
-    #qw_df, enc_df, mwu_df = drop_unused_dimensions(qw_df, enc_df, mwu_df, eps=0.001)
     mwu_df = update_mwu(qw_df, pm, pu_m, enc_df)
     qw_df, enc_df, mwu_df = drop_unused_dimensions(qw_df, enc_df, mwu_df, eps=0.001)
-    #pu_df = mwu_df.sum(axis=1)
-    #pu_df = qw_df @ mwu_df.T
-    #pu_df = mwu_df @ qw_df
-    # pu_df = update_pu(mwu_df, qw_df, enc_df, meanings)
 
     # Get accuracy, complexity and ib values
-    # acc_val = get_mutual_information(pu_df, qw_df, mwu_df)
-    # comp_val = get_mutual_information(qw_df, pm, enc_df)
     acc_val = get_mutual_information(pu, qw_df, mwu_df)
     comp_val = get_mutual_information(qw_df, pm, enc_df)
     ent_val = get_entropy(qw_df)
@@ -134,11 +106,4 @@ encoder_path = f'/res/encoders/wcs_encoders.pkl'
 with open(encoder_path, 'wb') as f:
     pickle.dump(wcs_encoders, f)
 
-# # Create IB-like plot of natural languages
-# complexity = wcs_ib_df['complexity']
-# accuracy = wcs_ib_df['accuracy']
-# plt_path = f'PUT_PLOT_OUTPUT_PATH_HERE'
-# plt.scatter(complexity, accuracy, marker="o")
-# # save figure
-# plt.savefig(plt_path)
 

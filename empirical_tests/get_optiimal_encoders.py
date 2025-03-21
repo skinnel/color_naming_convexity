@@ -10,14 +10,13 @@ from ib_from_scratch.ib_color_model_with_annealing import update_qw, update_mwu,
 from ib_from_scratch.ib_utils import get_entropy, get_mutual_information
 
 # load the model data
-model_path = '/Users/lindsayskinner/Documents/school/CLMS/Thesis/IB_color_naming_model/IB_color_naming.pkl'
+model_path = 'put IB_color_naming.pkl path here'
 with open(model_path, 'rb') as f:
     model_data = pkl.load(f)
 
 # Separate the encoders, betas and pu
 optimal_encs = model_data['qW_M']
 optimal_betas = model_data['betas']
-#pu_df = model_data['pM'].flatten()
 pm = model_data['pM'].flatten()
 
 # Initialize results objects
@@ -36,7 +35,6 @@ enc_formatted = {
 
 # Process the encoders to get the necessary outputs and format for QC calcuations and plot generation
 meanings = generate_WCS_meanings(perceptual_variance=64)
-#pm = np.ones(330) / 330
 pu_m = meanings
 
 # Get p(u) from p(m) and m(u) = p(u|m)
@@ -58,7 +56,6 @@ for i in range(len(optimal_encs)):
     qw_df = update_qw(pm, enc)
     mwu_df = update_mwu(qw_df, pm, pu_m, enc)
     qw_df, enc_df, mwu_df = drop_unused_dimensions(qw_df, enc, mwu_df, eps=0.001)
-    #pu_df = mwu_df.sum(axis=1)
 
     # Calculate results
     acc_val = get_mutual_information(pu, qw_df, mwu_df)

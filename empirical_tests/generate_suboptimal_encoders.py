@@ -212,18 +212,16 @@ if __name__ == '__main__':
 
     # Specify data load arguments
     enc_type = 'nl'  # synthetic or nl
-    #vz = '20241207_8'  # date_number if synthetic, str(number) if nl, 'optimal' if using pre-computed optimal ib encoders
-    vz = 'optimal'
-    #vz = '17'
-    wcs_path = '/Users/lindsayskinner/Documents/school/CLMS/Thesis/data/WCS-Data-20110316'
-    cielab_path = '/Users/lindsayskinner/Documents/school/CLMS/Thesis/data/cnum_CIELAB_table.txt'
-    fig_path = '/Users/lindsayskinner/Documents/school/CLMS/Thesis/figures/qc_figures'
+    vz = 'optimal' # date_number if synthetic, str(number) if nl, 'optimal' if using pre-computed optimal ib encoders
+    wcs_path = '/put wcs data directory path here'
+    cielab_path = 'put cnum_CIELAB_table.txt path here'
+    fig_path = 'put figures path here'
 
     # Load the relevant encoder data
     ib_res, cielab_map_df, enc_dict = load_wcs_enc_data(enc_type, vz, wcs_path, cielab_path)
 
     # Load the model data (needed to generate probabilitic need distribution for IB calculations)
-    model_path = '/Users/lindsayskinner/Documents/school/CLMS/Thesis/IB_color_naming_model/IB_color_naming.pkl'
+    model_path = 'put IB_color_naming.pkl path here'
     with open(model_path, 'rb') as f:
         model_data = pkl.load(f)
     pm = model_data['pM'].flatten()
@@ -236,19 +234,10 @@ if __name__ == '__main__':
 
     # Convert IB results to dataframe and save as csv
     ib_res = pd.DataFrame(ib_res)
-    res_path = f'/Users/lindsayskinner/PycharmProjects/clmsThesis/res/ib_results/nl_shuffled_enc_res.csv'
+    res_path = f'/res/ib_results/nl_shuffled_enc_res.csv'
     ib_res.to_csv(res_path)
 
     # Save encoders in compatible format
-    encoder_path = f'/Users/lindsayskinner/PycharmProjects/clmsThesis/res/encoders/nl_shuffled_enc.pkl'
+    encoder_path = f'/res/encoders/nl_shuffled_enc.pkl'
     with open(encoder_path, 'wb') as f:
         pkl.dump(shuffled_encs_dict, f)
-
-    # Experimentation ideas
-    # 1. [DONE] do like 100 samples at the different percentiles, measure distance from the optimal
-    #   (in complexity X accuracy space) and explore the IB and QC measures (averaged)
-    # 2. [DONE] Just use the reshuffled encoders and distance from the frontier
-    # 3. Make the pu/pm generation a function in the ib scripts that is imported into this and the other encoder
-    #    generating scripts (optimal and NL)
-    # 4. Try re-vamping my ib optimization code with the cleaned up pu/pm generation. If it works, try to use the
-    #    intermediary results to fill out the accuracy X complexity space
